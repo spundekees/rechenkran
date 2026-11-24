@@ -171,8 +171,6 @@
   #container .box::before { content: ""; position: absolute; left: -6px; right: -6px; top: -8px; height: 8px; background: #7f1d1d; border-radius: 3px; }
   #container .box::after { content: ""; position: absolute; left: 6px; right: 6px; bottom: 6px; height: 10px; border-radius: 2px;
     background: repeating-linear-gradient(45deg, #facc15 0 8px, #1e293b 8px 16px); }
-  #container .t1 { font-size: 16px; letter-spacing: .5px; margin-top: -10px; }
-  #container .t2 { font-size: 29px; letter-spacing: .5px; margin-top: 3px; }
   #container.need .box { animation: need 1.1s ease-in-out infinite; }
   @keyframes need { 50% { box-shadow: inset 0 8px 0 rgba(0,0,0,.18), 0 0 0 4px #fff, 0 0 22px 8px #fde047; } }
   #container.target .box { outline: 3px dashed rgba(255,255,255,.95); outline-offset: 4px; }
@@ -339,7 +337,7 @@
         <svg class="crane" id="craneSvg" width="1000" height="620" viewBox="0 0 1000 620" aria-hidden="true"></svg>
         <div id="trucks"></div>
         <div id="peeks"></div>
-        <div id="container"><div class="box"><span class="t1">Nur für</span><span class="t2">Bones</span></div></div>
+        <div id="container"><div class="box"></div></div>
         <div id="carriage">
           <div class="trolley"></div>
           <div id="swinger">

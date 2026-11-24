@@ -25,7 +25,7 @@ Offline genügt es, `index.html` im Browser zu öffnen. Es braucht keine Install
 Gewählte Aufgabenarten kommen ungefähr gleich oft dran. Dazu wählt man 12, 20, 32 oder 48 Aufgaben. Die Einstellungen werden im Browser gespeichert.
 
 ## Spielablauf
-Fünf Laster fahren vor. Vier davon zeigen die Ergebnisse der nächsten 4 Aufgaben, einer ist ein Ablenker. Die Kisten mit den Aufgaben liegen im roten Container „Nur für Bones“ links neben dem Kran. Man fährt den leeren Haken über den Container, lässt ihn herunter und zieht eine Kiste heraus. Erst dann sieht man die Aufgabe und bringt die Kiste zum passenden Laster. Jede richtig abgesetzte Kiste bleibt auf ihrem Laster liegen. Erst wenn alle 4 Kisten aufgeladen sind, fahren die Laster ab und neue kommen.
+Fünf Laster fahren vor. Vier davon zeigen die Ergebnisse der nächsten 4 Aufgaben, einer ist ein Ablenker. Die Kisten mit den Aufgaben liegen im roten Container links neben dem Kran. Man fährt den leeren Haken über den Container, lässt ihn herunter und zieht eine Kiste heraus. Erst dann sieht man die Aufgabe und bringt die Kiste zum passenden Laster. Jede richtig abgesetzte Kiste bleibt auf ihrem Laster liegen. Erst wenn alle 4 Kisten aufgeladen sind, fahren die Laster ab und neue kommen.
 
 ## Bedienung
 - **Computer:** mit `←` `→` fahren, mit `↓` oder der Leertaste absetzen.
