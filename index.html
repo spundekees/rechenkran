@@ -122,7 +122,7 @@
   #load.fast, #cable.fast { transition-duration: .45s; }
   .slings { display: block; }
   .crate {
-    position: relative; width: 120px; height: 76px; border-radius: 6px;
+    position: relative; width: 108px; height: 76px; border-radius: 6px; margin: 0 auto;
     border: 4px solid #7c4a1d;
     background:
       linear-gradient(90deg, transparent 0 14px, rgba(124,74,29,.55) 14px 18px, transparent 18px calc(100% - 18px), rgba(124,74,29,.55) calc(100% - 18px) calc(100% - 14px), transparent 0),
@@ -131,7 +131,7 @@
     box-shadow: 0 6px 0 rgba(0,0,0,.15);
   }
   .crate .label {
-    background: #fffbeb; border-radius: 8px; padding: 2px 8px; font-weight: 900; font-size: 30px; white-space: nowrap;
+    background: #fffbeb; border-radius: 8px; padding: 2px 8px; font-weight: 900; font-size: 28px; white-space: nowrap;
     box-shadow: inset 0 -3px 0 rgba(0,0,0,.08);
   }
   .crate.pop { animation: pop .45s cubic-bezier(.3,1.6,.5,1); }
@@ -141,24 +141,43 @@
     60% { transform: translateX(-6px); } 80% { transform: translateX(5px); } }
 
   /* Laster */
-  .truck { position: absolute; top: 440px; width: 162px; height: 102px; z-index: 3; cursor: pointer; }
+  .truck { position: absolute; top: 440px; width: 144px; height: 102px; z-index: 3; cursor: pointer; }
   .truck .body { position: absolute; inset: 0; }
-  .truck .bed { position: absolute; left: 0; top: 30px; width: 120px; height: 46px; border-radius: 6px 6px 3px 3px;
+  .truck .bed { position: absolute; left: 0; top: 30px; width: 108px; height: 46px; border-radius: 6px 6px 3px 3px;
     background: var(--c); box-shadow: inset 0 -8px 0 rgba(0,0,0,.15), inset 0 4px 0 rgba(255,255,255,.25);
     display: flex; align-items: center; justify-content: center; }
-  .truck .num { font-weight: 900; font-size: 34px; color: #fff; text-shadow: 0 2px 0 rgba(0,0,0,.3); transition: color .2s; }
-  .truck .cab { position: absolute; left: 122px; top: 4px; width: 40px; height: 72px; border-radius: 6px 16px 4px 4px;
+  .truck .num { font-weight: 900; font-size: 32px; color: #fff; text-shadow: 0 2px 0 rgba(0,0,0,.3); transition: color .2s; }
+  .truck .cab { position: absolute; left: 110px; top: 4px; width: 34px; height: 72px; border-radius: 6px 16px 4px 4px;
     background: var(--c); box-shadow: inset 0 -8px 0 rgba(0,0,0,.15); }
-  .truck .cab::before { content: ""; position: absolute; left: 8px; top: 8px; width: 26px; height: 22px; border-radius: 3px 10px 3px 3px; background: #e0f2fe; box-shadow: inset -4px -4px 0 #bae6fd; }
+  .truck .cab::before { content: ""; position: absolute; left: 6px; top: 8px; width: 22px; height: 22px; border-radius: 3px 10px 3px 3px; background: #e0f2fe; box-shadow: inset -4px -4px 0 #bae6fd; }
   .truck .cab::after { content: ""; position: absolute; right: -4px; bottom: 10px; width: 6px; height: 8px; background: #fde047; border-radius: 2px; }
-  .truck .chassis { position: absolute; left: 0; top: 74px; width: 162px; height: 8px; background: #334155; border-radius: 3px; }
+  .truck .chassis { position: absolute; left: 0; top: 74px; width: 144px; height: 8px; background: #334155; border-radius: 3px; }
   .truck .wheel { position: absolute; top: 72px; width: 28px; height: 28px; border-radius: 50%;
     background: radial-gradient(circle, #cbd5e1 0 4px, transparent 5px), conic-gradient(#1e293b 0 25%, #334155 0 50%, #1e293b 0 75%, #334155 0);
     border: 4px solid #0f172a; }
-  .truck .w1 { left: 10px; } .truck .w2 { left: 44px; } .truck .w3 { left: 126px; }
+  .truck .w1 { left: 6px; } .truck .w2 { left: 38px; } .truck .w3 { left: 110px; }
   .truck.driving .wheel { animation: spin .35s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
   .truck .crate { position: absolute; left: 0; top: -46px; }
+  /* Container mit den Aufgaben-Kisten */
+  #container { position: absolute; left: 102px; top: 428px; width: 126px; height: 112px; z-index: 6; cursor: pointer; }
+  #container .box {
+    position: absolute; inset: 0; border-radius: 4px; border: 4px solid #7f1d1d;
+    background: repeating-linear-gradient(90deg, #dc2626 0 10px, #b91c1c 10px 13px);
+    box-shadow: inset 0 8px 0 rgba(0,0,0,.18), 0 4px 0 rgba(0,0,0,.15);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; color: #fff; text-align: center;
+    font-family: var(--font); font-weight: 900; line-height: 1; text-shadow: 0 2px 0 rgba(0,0,0,.35);
+  }
+  #container .box::before { content: ""; position: absolute; left: -6px; right: -6px; top: -8px; height: 8px; background: #7f1d1d; border-radius: 3px; }
+  #container .box::after { content: ""; position: absolute; left: 6px; right: 6px; bottom: 6px; height: 10px; border-radius: 2px;
+    background: repeating-linear-gradient(45deg, #facc15 0 8px, #1e293b 8px 16px); }
+  #container .t1 { font-size: 16px; letter-spacing: .5px; margin-top: -10px; }
+  #container .t2 { font-size: 29px; letter-spacing: .5px; margin-top: 3px; }
+  #container.need .box { animation: need 1.1s ease-in-out infinite; }
+  @keyframes need { 50% { box-shadow: inset 0 8px 0 rgba(0,0,0,.18), 0 0 0 4px #fff, 0 0 22px 8px #fde047; } }
+  #container.target .box { outline: 3px dashed rgba(255,255,255,.95); outline-offset: 4px; }
+  #peeks { position: absolute; left: 110px; top: 412px; width: 110px; display: flex; justify-content: center; gap: 4px; z-index: 4; }
+  #peeks i { width: 22px; height: 18px; border-radius: 3px; border: 2px solid #7c4a1d; background: #d69e5c; }
   .truck.ok .bed { box-shadow: inset 0 -8px 0 rgba(0,0,0,.15), 0 0 0 5px #fff, 0 0 24px 8px #4ade80; }
   .truck.wrong .num { color: #fecaca; }
   .truck.dead { filter: grayscale(.85) brightness(.9); opacity: .55; }
@@ -231,7 +250,7 @@
   .tabs button.on { background: #fff; color: var(--ink); box-shadow: 0 3px 0 #cbd5e1; }
   .poolinfo { font-size: 14px; min-height: 1.2em; }
   .poolinfo.warn { color: #c2410c !important; }
-  .crate .label.small { font-size: 24px; padding: 2px 6px; }
+  .crate .label.small { font-size: 21px; padding: 2px 5px; }
   .big {
     border: 0; border-radius: 20px; padding: 14px 34px; font-size: 26px; font-weight: 900; color: #fff;
     background: linear-gradient(#4ade80, #16a34a); box-shadow: 0 6px 0 #166534; margin-top: 20px;
@@ -319,6 +338,8 @@
         <div id="fx"></div>
         <svg class="crane" id="craneSvg" width="1000" height="620" viewBox="0 0 1000 620" aria-hidden="true"></svg>
         <div id="trucks"></div>
+        <div id="peeks"></div>
+        <div id="container"><div class="box"><span class="t1">Nur für</span><span class="t2">Bones</span></div></div>
         <div id="carriage">
           <div class="trolley"></div>
           <div id="swinger">
@@ -433,10 +454,11 @@ const shuffle = (a) => { for (let i = a.length - 1; i > 0; i--) { const j = Math
 const pick = (a) => a[Math.floor(Math.random() * a.length)];
 
 /* ---------- Konstanten ---------- */
-const SLOTS = [200, 365, 530, 695, 860];        // Mitte der Ladefläche je Laster
+const SLOTS = [165, 300, 450, 600, 750, 900];   // 0 = Container, 1–5 = Mitte der Ladefläche je Laster
+const TRUCKS = SLOTS.length - 1;
 const ROW_COLORS = ['#f43f5e','#f97316','#eab308','#22c55e','#14b8a6','#0ea5e9','#6366f1','#a855f7','#ec4899','#64748b'];
 const TRUCK_COLORS = ['#ef4444','#f59e0b','#10b981','#3b82f6','#a855f7','#ec4899','#14b8a6','#f97316'];
-const ROPE_UP = 60, ROPE_DOWN = 266;               // Seillänge oben / Kiste auf Ladefläche
+const ROPE_UP = 60, ROPE_DOWN = 266, ROPE_PICK = 330; // Seillänge oben / Kiste auf Ladefläche / im Container
 const PRAISE = ['Super!','Klasse!','Prima!','Spitze!','Toll gemacht!','Richtig!','Wunderbar!','Bravo!'];
 const STORE_KEY = 'rechenkran-v2';
 
@@ -790,7 +812,7 @@ function tipFor(t) {
 /* ---------- Spielzustand ---------- */
 const st = {
   mode: 'menu',     // menu | play | busy | end
-  queue: [], idx: 0, slot: 2, options: [], dead: new Set(), batchStart: 0, batchEnd: 0,
+  carrying: false, queue: [], idx: 0, slot: 0, options: [], dead: new Set(), batchStart: 0, batchEnd: 0,
   tries: 0, score: 0, streak: 0, bestStreak: 0, firstTotal: 0,
   mistakes: new Map(),
 };
@@ -807,7 +829,8 @@ function placeCarriage(animate = true) {
   if (!animate) carriage.style.transition = 'none';
   carriage.style.transform = `translateX(${SLOTS[st.slot]}px)`;
   if (!animate) { carriage.offsetHeight; carriage.style.transition = ''; }
-  [...trucksEl.children].forEach((t, i) => t.classList.toggle('target', i === st.slot && st.mode === 'play'));
+  [...trucksEl.children].forEach((t, i) => t.classList.toggle('target', i + 1 === st.slot && st.mode === 'play'));
+  $('#container').classList.toggle('target', st.slot === 0 && st.mode === 'play');
 }
 
 function say(html, cls = '', ms = 1600) {
@@ -832,11 +855,11 @@ function buildTrucks(values) {
   values.forEach((v, i) => {
     const t = document.createElement('div');
     t.className = 'truck';
-    t.style.left = (SLOTS[i] - 60) + 'px';
+    t.style.left = (SLOTS[i + 1] - 54) + 'px';
     t.style.setProperty('--c', colors[i]);
     t.innerHTML = `<div class="body"><div class="chassis"></div><div class="bed"><span class="num">${v}</span></div><div class="cab"></div>
       <div class="wheel w1"></div><div class="wheel w2"></div><div class="wheel w3"></div></div>`;
-    t.addEventListener('pointerdown', (e) => { e.preventDefault(); moveTo(i); });
+    t.addEventListener('pointerdown', (e) => { e.preventDefault(); moveTo(i + 1); });
     trucksEl.appendChild(t);
   });
 }
@@ -897,7 +920,7 @@ function buildBatch() {
   st.batchStart = start; st.batchEnd = end;
   const batch = st.queue.slice(start, end), vals = new Set(ans);
   let guard = 0;
-  while (vals.size < SLOTS.length && guard++ < 100) {
+  while (vals.size < TRUCKS && guard++ < 100) {
     const o = makeOptions(pick(batch)).filter(v => !vals.has(v));
     if (o.length) vals.add(pick(o));
   }
@@ -919,12 +942,43 @@ function showTask() {
   const t = current();
   st.tries = 0; st.dead = new Set();
   [...trucksEl.children].forEach(tr => tr.classList.remove('dead', 'wrong', 'hint', 'ok'));
+  st.carrying = false;
+  crate.style.visibility = 'hidden';
+  crate.classList.remove('pop', 'shake');
+  $('#container').classList.add('need');
+  renderPeeks();
+  if (st.idx === 0) say('Hol eine Kiste aus dem Container! 🏗️', '', 2600);
+  updateHud();
+  st.mode = 'play';
+  placeCarriage();
+}
+
+function renderPeeks() {
+  const n = Math.max(0, st.batchEnd - st.idx - (st.carrying ? 1 : 0));
+  $('#peeks').innerHTML = '<i></i>'.repeat(n);
+}
+
+// Haken in den Container lassen und die nächste Aufgabe herausziehen
+async function pickUp() {
+  st.mode = 'busy';
+  placeCarriage();
+  const t = current();
+  bubble.classList.remove('show');
+  sfx.drop();
+  setRope(ROPE_PICK);
+  await sleep(760);
+  sfx.clunk();
   taskLabel.textContent = taskText(t);
   taskLabel.classList.toggle('small', taskText(t).length > 6);
   crate.style.visibility = 'visible';
-  crate.classList.remove('pop', 'shake'); crate.offsetHeight; crate.classList.add('pop');
+  st.carrying = true;
+  $('#container').classList.remove('need');
+  renderPeeks();
+  await sleep(250);
+  tone(300, .5, 'triangle', .1, 0, 600);
+  setRope(ROPE_UP);
+  await sleep(720);
   if (t.rep) say('Wiederholung 💪', '', 1400);
-  updateHud();
   st.mode = 'play';
   placeCarriage();
 }
@@ -948,14 +1002,25 @@ function move(dir) {
 
 async function drop() {
   if (st.mode !== 'play') return;
-  const truck = trucksEl.children[st.slot];
+  if (st.slot === 0) {
+    if (!st.carrying) return pickUp();
+    say('Bring die Kiste zu einem Laster!', 'bad', 1500);
+    sfx.bump();
+    return;
+  }
+  if (!st.carrying) {
+    say('Hol zuerst eine Kiste aus dem Container!', 'bad', 1700);
+    sfx.bump();
+    return;
+  }
+  const ti = st.slot - 1, truck = trucksEl.children[ti];
   if (truck.classList.contains('loaded')) {
     say('Der Laster ist schon beladen!', 'bad', 1500);
     crate.classList.remove('shake'); crate.offsetHeight; crate.classList.add('shake');
     sfx.bump();
     return;
   }
-  if (st.dead.has(st.slot)) {
+  if (st.dead.has(ti)) {
     say('Der passt nicht – such einen anderen!', 'bad', 1500);
     crate.classList.remove('shake'); crate.offsetHeight; crate.classList.add('shake');
     sfx.bump();
@@ -963,7 +1028,7 @@ async function drop() {
   }
   st.mode = 'busy';
   [...trucksEl.children].forEach(t => t.classList.remove('target'));
-  const t = current(), ans = t.ans, val = st.options[st.slot];
+  const t = current(), ans = t.ans, val = st.options[ti];
   sfx.drop();
   setRope(ROPE_DOWN);
   await sleep(720);
@@ -981,6 +1046,7 @@ async function drop() {
     const c = crate.cloneNode(true); c.removeAttribute('id'); c.classList.remove('pop', 'shake');
     truck.querySelector('.body').appendChild(c);
     truck.classList.add('loaded');
+    st.carrying = false;
     crate.style.visibility = 'hidden';
     setRope(ROPE_UP, true);
     st.idx++;
@@ -1015,7 +1081,7 @@ async function drop() {
     await sleep(450);
     truck.classList.remove('shake');
     truck.classList.add('dead');
-    st.dead.add(st.slot);
+    st.dead.add(ti);
     if (st.tries >= 2) {
       const ci = st.options.indexOf(ans);
       trucksEl.children[ci].classList.add('hint');
@@ -1051,7 +1117,7 @@ function startGame(tasks) {
   $('#endScreen').classList.remove('show');
   bubble.classList.remove('show');
   Object.assign(st, { batchStart: 0, batchEnd: 0, queue: tasks, idx: 0, score: 0, streak: 0, bestStreak: 0, firstTotal: 0, mistakes: new Map() });
-  st.slot = 2;
+  st.slot = 0; st.carrying = false;
   setRope(ROPE_UP);
   placeCarriage(false);
   audio();
@@ -1186,6 +1252,7 @@ function holdButton(sel, fn) {
   ['pointerup', 'pointerleave', 'pointercancel'].forEach(ev => b.addEventListener(ev, stop));
   b.addEventListener('contextmenu', e => e.preventDefault());
 }
+$('#container').addEventListener('pointerdown', (e) => { e.preventDefault(); moveTo(0); });
 holdButton('#btnLeft', () => move(-1));
 holdButton('#btnRight', () => move(1));
 $('#btnDrop').addEventListener('pointerdown', (e) => { e.preventDefault(); audio(); drop(); });
