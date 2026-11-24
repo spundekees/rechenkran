@@ -22,7 +22,10 @@ Offline genügt es, `index.html` im Browser zu öffnen. Es braucht keine Install
 
 **Jahreszeiten:** Der Hintergrund passt sich automatisch der Jahreszeit an: Frühling mit Kirschblüten, Sommer mit Vögeln, Herbst mit fallendem Laub, Winter mit Schnee und Schneemann. Im Menü lässt sich die Jahreszeit auch fest einstellen.
 
-Gewählte Aufgabenarten kommen ungefähr gleich oft dran. Dazu wählt man 10, 20, 30 oder 50 Aufgaben. Die Einstellungen werden im Browser gespeichert.
+Gewählte Aufgabenarten kommen ungefähr gleich oft dran. Dazu wählt man 12, 20, 32 oder 48 Aufgaben. Die Einstellungen werden im Browser gespeichert.
+
+## Spielablauf
+Fünf Laster fahren vor. Vier davon zeigen die Ergebnisse der nächsten 4 Aufgaben, einer ist ein Ablenker. Die Kisten kommen nacheinander an den Kran. Jede richtig abgesetzte Kiste bleibt auf ihrem Laster liegen. Erst wenn alle 4 Kisten aufgeladen sind, fahren die Laster ab und neue kommen.
 
 ## Bedienung
 - **Computer:** mit `←` `→` fahren, mit `↓` oder der Leertaste absetzen.

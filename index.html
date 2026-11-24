@@ -236,6 +236,27 @@
     border: 0; border-radius: 20px; padding: 14px 34px; font-size: 26px; font-weight: 900; color: #fff;
     background: linear-gradient(#4ade80, #16a34a); box-shadow: 0 6px 0 #166534; margin-top: 20px;
   }
+  .menu-card { width: min(1000px, 100%); max-height: calc(100vh - 24px); max-height: calc(100dvh - 24px); overflow-y: auto;
+    padding: 16px 22px 14px; -webkit-overflow-scrolling: touch; }
+  .menu-head h1 { font-size: clamp(26px, 4.5vw, 36px); }
+  .menu-head p { margin: 2px 0 0; font-size: 15px; }
+  .menu-grid { display: grid; grid-template-columns: 1.55fr 1fr; gap: 24px; align-items: start; }
+  .menu-card h2 { font-size: 17px; margin: 12px 0 6px; }
+  .menu-card .tabs { margin-top: 12px; }
+  .menu-card .row-btn { font-size: 26px; padding: 7px 0 6px; border-radius: 14px; }
+  .menu-card .row-btn small { font-size: 11px; margin-top: 2px; }
+  .menu-card .chip.big2 { font-size: 17px; padding: 7px 14px; }
+  .menu-card .big { margin-top: 6px; width: 100%; }
+  .menu-card .howto { margin-top: 8px; font-size: 13px; }
+  .side { padding-top: 6px; }
+  .startbar { margin-top: 14px; }
+  @media (max-width: 760px) {
+    .menu-grid { grid-template-columns: 1fr; gap: 0; }
+    .side { display: contents; }
+    .startbar { position: sticky; bottom: -14px; background: linear-gradient(rgba(255,255,255,0), #fff 22%); padding: 14px 0 12px; margin-top: 4px; }
+    .menu-head p { display: none; }
+  }
+  @media (max-height: 700px) and (min-width: 761px) { .menu-head p { display: none; } .menu-card h2 { margin: 8px 0 5px; } }
   .big:disabled { filter: grayscale(1); opacity: .5; cursor: default; }
   .big:active:not(:disabled) { transform: translateY(4px); box-shadow: 0 2px 0 #166534; }
   .big.alt { background: linear-gradient(#60a5fa, #2563eb); box-shadow: 0 6px 0 #1e40af; font-size: 20px; padding: 12px 22px; }
@@ -268,6 +289,7 @@
   <div id="hud">
     <span class="pill" id="hudTask">Aufgabe 0 / 0</span>
     <div id="progress"><div></div></div>
+    <span class="pill" title="Beladene Laster">🚚 <span id="hudLoad">0/4</span></span>
     <span class="pill" title="Richtig beim ersten Versuch">⭐ <span id="hudScore">0</span></span>
     <span class="pill" title="Richtig hintereinander">🔥 <span id="hudStreak">0</span></span>
     <button class="iconbtn" id="btnSound" title="Ton an/aus">🔊</button>
@@ -331,49 +353,56 @@
 
 <!-- Startbildschirm -->
 <div class="overlay show" id="menu">
-  <div class="card">
-    <h1>🏗️ Rechen-<span>Kran</span></h1>
-    <p>Fahre den Kran über den Laster mit dem richtigen Ergebnis und setze die Kiste ab!</p>
-    <div class="tabs" id="modeTabs">
-      <button data-mode="mul">✖️ Einmaleins</button>
-      <button data-mode="add">➕ Plus &amp; Minus</button>
+  <div class="card menu-card">
+    <div class="menu-head">
+      <h1>🏗️ Rechen-<span>Kran</span></h1>
+      <p>Fahre den Kran über den Laster mit dem richtigen Ergebnis und setze die Kiste ab!</p>
     </div>
-
-    <div id="secMul">
-      <h2>Was willst du rechnen?</h2>
-      <div class="chips" id="mulOps"></div>
-      <h2>Welche Reihen?</h2>
-      <div class="rows" id="rowButtons"></div>
-      <div class="chips" style="margin-top:12px">
-        <button class="chip" id="allRows">Alle Reihen</button>
-        <button class="chip" id="noRows">Keine</button>
+    <div class="menu-grid">
+      <div class="col">
+        <div class="tabs" id="modeTabs">
+          <button data-mode="mul">✖️ Einmaleins</button>
+          <button data-mode="add">➕ Plus &amp; Minus</button>
+        </div>
+        <div id="secMul">
+          <h2>Rechenart</h2>
+          <div class="chips" id="mulOps"></div>
+          <h2>Reihen</h2>
+          <div class="rows" id="rowButtons"></div>
+          <div class="chips" style="margin-top:8px">
+            <button class="chip" id="allRows">Alle Reihen</button>
+            <button class="chip" id="noRows">Keine</button>
+          </div>
+        </div>
+        <div id="secAdd">
+          <h2>Rechenart</h2>
+          <div class="chips" id="addOps"></div>
+          <h2>Zahlenraum</h2>
+          <div class="chips" id="rangeChips"></div>
+          <div id="typeBox">
+            <h2>Aufgaben</h2>
+            <div class="chips" id="typeChips"></div>
+          </div>
+          <div id="crossBox">
+            <h2>Zehnerübergang</h2>
+            <div class="chips" id="crossChips"></div>
+          </div>
+        </div>
       </div>
-    </div>
-
-    <div id="secAdd">
-      <h2>Was willst du rechnen?</h2>
-      <div class="chips" id="addOps"></div>
-      <h2>Zahlenraum</h2>
-      <div class="chips" id="rangeChips"></div>
-      <div id="typeBox">
-        <h2>Welche Aufgaben?</h2>
-        <div class="chips" id="typeChips"></div>
+      <div class="col side">
+        <h2>Anzahl Aufgaben</h2>
+        <div class="chips" id="countChips"></div>
+        <h2>Jahreszeit</h2>
+        <div class="chips" id="seasonChips"></div>
+        <div class="startbar">
+          <p class="poolinfo" id="poolInfo"></p>
+          <button class="big" id="btnStart">Los geht's! ▶</button>
+        </div>
+        <div class="howto">
+          <kbd>←</kbd> <kbd>→</kbd> Kran fahren · <kbd>↓</kbd> / <kbd>Leertaste</kbd> absetzen.
+          Auf dem iPad mit den Knöpfen unten.
+        </div>
       </div>
-      <div id="crossBox">
-        <h2>Zehnerübergang</h2>
-        <div class="chips" id="crossChips"></div>
-      </div>
-    </div>
-
-    <p class="poolinfo" id="poolInfo"></p>
-    <h2>Wie viele Aufgaben?</h2>
-    <div class="chips" id="countChips"></div>
-    <h2>Jahreszeit</h2>
-    <div class="chips" id="seasonChips"></div>
-    <button class="big" id="btnStart">Los geht's! ▶</button>
-    <div class="howto">
-      Am Computer: <kbd>←</kbd> <kbd>→</kbd> Kran fahren, <kbd>↓</kbd> oder <kbd>Leertaste</kbd> Kiste absetzen.<br>
-      Auf dem iPad: mit den Knöpfen unten steuern.
     </div>
   </div>
 </div>
@@ -761,7 +790,7 @@ function tipFor(t) {
 /* ---------- Spielzustand ---------- */
 const st = {
   mode: 'menu',     // menu | play | busy | end
-  queue: [], idx: 0, slot: 2, options: [], dead: new Set(),
+  queue: [], idx: 0, slot: 2, options: [], dead: new Set(), batchStart: 0, batchEnd: 0,
   tries: 0, score: 0, streak: 0, bestStreak: 0, firstTotal: 0,
   mistakes: new Map(),
 };
@@ -794,6 +823,7 @@ function updateHud() {
   $('#progress > div').style.width = (total ? (st.idx / total) * 100 : 0) + '%';
   $('#hudScore').textContent = st.score;
   $('#hudStreak').textContent = st.streak;
+  $('#hudLoad').textContent = `${st.idx - st.batchStart}/${st.batchEnd - st.batchStart}`;
 }
 
 function buildTrucks(values) {
@@ -851,20 +881,50 @@ function confetti(x, y) {
 /* ---------- Ablauf ---------- */
 function current() { return st.queue[st.idx]; }
 
-async function nextTask(first = false) {
+// Eine Laster-Runde: bis zu 4 Aufgaben mit verschiedenen Ergebnissen, dazu ein Ablenker-Laster.
+// Erst wenn alle Kisten aufgeladen sind, fahren die Laster ab.
+const PER_BATCH = 4;
+function buildBatch() {
+  const start = st.idx, ans = new Set();
+  let end = start;
+  while (end < st.queue.length && end - start < PER_BATCH) {
+    if (!ans.has(st.queue[end].ans)) { ans.add(st.queue[end].ans); end++; continue; }
+    // gleiches Ergebnis schon in dieser Runde: eine spätere Aufgabe vorziehen
+    const j = st.queue.findIndex((q, k) => k > end && !ans.has(q.ans));
+    if (j < 0) break;
+    [st.queue[end], st.queue[j]] = [st.queue[j], st.queue[end]];
+  }
+  st.batchStart = start; st.batchEnd = end;
+  const batch = st.queue.slice(start, end), vals = new Set(ans);
+  let guard = 0;
+  while (vals.size < SLOTS.length && guard++ < 100) {
+    const o = makeOptions(pick(batch)).filter(v => !vals.has(v));
+    if (o.length) vals.add(pick(o));
+  }
+  st.options = shuffle([...vals]);
+}
+
+async function nextBatch() {
   if (st.idx >= st.queue.length) return finish();
+  buildBatch();
+  buildTrucks(st.options);
+  crate.style.visibility = 'hidden';
+  st.mode = 'busy';
+  updateHud();
+  await driveIn();
+  showTask();
+}
+
+function showTask() {
   const t = current();
   st.tries = 0; st.dead = new Set();
-  st.options = makeOptions(t);
-  updateHud();
+  [...trucksEl.children].forEach(tr => tr.classList.remove('dead', 'wrong', 'hint', 'ok'));
   taskLabel.textContent = taskText(t);
   taskLabel.classList.toggle('small', taskText(t).length > 6);
   crate.style.visibility = 'visible';
-  crate.classList.remove('pop'); crate.offsetHeight; crate.classList.add('pop');
-  buildTrucks(st.options);
-  st.mode = 'busy';
+  crate.classList.remove('pop', 'shake'); crate.offsetHeight; crate.classList.add('pop');
   if (t.rep) say('Wiederholung 💪', '', 1400);
-  await driveIn();
+  updateHud();
   st.mode = 'play';
   placeCarriage();
 }
@@ -889,6 +949,12 @@ function move(dir) {
 async function drop() {
   if (st.mode !== 'play') return;
   const truck = trucksEl.children[st.slot];
+  if (truck.classList.contains('loaded')) {
+    say('Der Laster ist schon beladen!', 'bad', 1500);
+    crate.classList.remove('shake'); crate.offsetHeight; crate.classList.add('shake');
+    sfx.bump();
+    return;
+  }
   if (st.dead.has(st.slot)) {
     say('Der passt nicht – such einen anderen!', 'bad', 1500);
     crate.classList.remove('shake'); crate.offsetHeight; crate.classList.add('shake');
@@ -914,13 +980,20 @@ async function drop() {
     // Kiste auf den Laster umsetzen
     const c = crate.cloneNode(true); c.removeAttribute('id'); c.classList.remove('pop', 'shake');
     truck.querySelector('.body').appendChild(c);
+    truck.classList.add('loaded');
     crate.style.visibility = 'hidden';
     setRope(ROPE_UP, true);
-    await sleep(900);
-    await driveOut();
     st.idx++;
     updateHud();
-    await nextTask();
+    if (st.idx >= st.batchEnd) {
+      await sleep(900);
+      say('Alle beladen – los geht\'s! 🚚', 'good', 1400);
+      await driveOut();
+      await nextBatch();
+    } else {
+      await sleep(800);
+      showTask();
+    }
   } else {
     // falsch
     st.tries++;
@@ -977,12 +1050,12 @@ function startGame(tasks) {
   $('#menu').classList.remove('show');
   $('#endScreen').classList.remove('show');
   bubble.classList.remove('show');
-  Object.assign(st, { queue: tasks, idx: 0, score: 0, streak: 0, bestStreak: 0, firstTotal: 0, mistakes: new Map() });
+  Object.assign(st, { batchStart: 0, batchEnd: 0, queue: tasks, idx: 0, score: 0, streak: 0, bestStreak: 0, firstTotal: 0, mistakes: new Map() });
   st.slot = 2;
   setRope(ROPE_UP);
   placeCarriage(false);
   audio();
-  nextTask(true);
+  nextBatch();
 }
 
 /* ---------- Menü ---------- */
@@ -1047,7 +1120,7 @@ function renderMenu() {
   [...$('#seasonChips').children].forEach(b => b.classList.remove('big2'));
 
   // Anzahl
-  chipGroup($('#countChips'), [10, 20, 30, 50].map(n => ({ v: n, label: String(n) })), v => s.count === v, v => { s.count = v; });
+  chipGroup($('#countChips'), [12, 20, 32, 48].map(n => ({ v: n, label: String(n) })), v => s.count === v, v => { s.count = v; });
   [...$('#countChips').children].forEach(b => b.classList.remove('big2'));
 
   // Prüfen, ob es Aufgaben gibt
