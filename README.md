@@ -20,6 +20,8 @@ Offline genügt es, `index.html` im Browser zu öffnen. Es braucht keine Install
   - ZE ± ZE (34 + 25)
 - Zehnerübergang: ohne, mit oder beides (bis 20 und bei ZE ± E / ZE ± ZE)
 
+**Jahreszeiten:** Der Hintergrund passt sich automatisch der Jahreszeit an: Frühling mit Kirschblüten, Sommer mit Vögeln, Herbst mit fallendem Laub, Winter mit Schnee und Schneemann. Im Menü lässt sich die Jahreszeit auch fest einstellen.
+
 Gewählte Aufgabenarten kommen ungefähr gleich oft dran. Dazu wählt man 10, 20, 30 oder 50 Aufgaben. Die Einstellungen werden im Browser gespeichert.
 
 ## Bedienung
