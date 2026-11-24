@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#7dd3fc">
-<title>Kran-Einmaleins</title>
+<title>Rechenkran</title>
 <style>
   :root {
     --font: ui-rounded, "SF Pro Rounded", "Arial Rounded MT Bold", "Nunito", "Trebuchet MS", system-ui, sans-serif;
@@ -28,7 +28,7 @@
 
   #app {
     height: 100vh; height: 100dvh;
-    display: grid; grid-template-rows: auto 1fr auto;
+    display: grid; grid-template-rows: auto 1fr auto; grid-template-columns: minmax(0, 1fr); width: 100%;
     padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
     background: linear-gradient(#38bdf8, #bae6fd 70%, #e0f2fe);
   }
@@ -193,6 +193,14 @@
   .chips { display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
   .chip { border: 0; border-radius: 999px; padding: 8px 16px; font-weight: 800; font-size: 16px; background: #f1f5f9; color: #334155; box-shadow: 0 3px 0 #cbd5e1; }
   .chip.on { background: #0ea5e9; color: #fff; box-shadow: 0 3px 0 #0369a1; }
+  .chip small { display: block; font-size: 12px; font-weight: 700; opacity: .8; }
+  .chip.big2 { font-size: 20px; padding: 8px 18px; }
+  .tabs { display: flex; gap: 6px; background: #f1f5f9; border-radius: 18px; padding: 5px; margin-top: 14px; }
+  .tabs button { flex: 1; border: 0; border-radius: 14px; padding: 10px 6px; font-size: 18px; font-weight: 900; background: transparent; color: #64748b; }
+  .tabs button.on { background: #fff; color: var(--ink); box-shadow: 0 3px 0 #cbd5e1; }
+  .poolinfo { font-size: 14px; min-height: 1.2em; }
+  .poolinfo.warn { color: #c2410c !important; }
+  .crate .label.small { font-size: 24px; padding: 2px 6px; }
   .big {
     border: 0; border-radius: 20px; padding: 14px 34px; font-size: 26px; font-weight: 900; color: #fff;
     background: linear-gradient(#4ade80, #16a34a); box-shadow: 0 6px 0 #166534; margin-top: 20px;
@@ -217,8 +225,10 @@
     .row-btn { font-size: 24px; }
     .ctl { width: 78px; height: 66px; }
     .ctl.drop { width: 110px; }
-    #hud { font-size: 15px; gap: 8px; padding: 6px 8px; }
-    #hud .pill { padding: 4px 9px; }
+    #hud { font-size: 14px; gap: 6px; padding: 6px 8px; }
+    #hud .pill { padding: 4px 8px; }
+    #progress { min-width: 24px; }
+    .iconbtn { width: 36px; height: 36px; font-size: 17px; flex: none; }
   }
 </style>
 </head>
@@ -289,14 +299,40 @@
 <!-- Startbildschirm -->
 <div class="overlay show" id="menu">
   <div class="card">
-    <h1>🏗️ Kran-<span>Einmaleins</span></h1>
+    <h1>🏗️ Rechen-<span>Kran</span></h1>
     <p>Fahre den Kran über den Laster mit dem richtigen Ergebnis und setze die Kiste ab!</p>
-    <h2>Welche Reihen willst du üben?</h2>
-    <div class="rows" id="rowButtons"></div>
-    <div class="chips" style="margin-top:12px">
-      <button class="chip" id="allRows">Alle Reihen</button>
-      <button class="chip" id="noRows">Keine</button>
+    <div class="tabs" id="modeTabs">
+      <button data-mode="mul">✖️ Einmaleins</button>
+      <button data-mode="add">➕ Plus &amp; Minus</button>
     </div>
+
+    <div id="secMul">
+      <h2>Was willst du rechnen?</h2>
+      <div class="chips" id="mulOps"></div>
+      <h2>Welche Reihen?</h2>
+      <div class="rows" id="rowButtons"></div>
+      <div class="chips" style="margin-top:12px">
+        <button class="chip" id="allRows">Alle Reihen</button>
+        <button class="chip" id="noRows">Keine</button>
+      </div>
+    </div>
+
+    <div id="secAdd">
+      <h2>Was willst du rechnen?</h2>
+      <div class="chips" id="addOps"></div>
+      <h2>Zahlenraum</h2>
+      <div class="chips" id="rangeChips"></div>
+      <div id="typeBox">
+        <h2>Welche Aufgaben?</h2>
+        <div class="chips" id="typeChips"></div>
+      </div>
+      <div id="crossBox">
+        <h2>Zehnerübergang</h2>
+        <div class="chips" id="crossChips"></div>
+      </div>
+    </div>
+
+    <p class="poolinfo" id="poolInfo"></p>
     <h2>Wie viele Aufgaben?</h2>
     <div class="chips" id="countChips"></div>
     <button class="big" id="btnStart">Los geht's! ▶</button>
@@ -338,10 +374,15 @@ const ROW_COLORS = ['#f43f5e','#f97316','#eab308','#22c55e','#14b8a6','#0ea5e9',
 const TRUCK_COLORS = ['#ef4444','#f59e0b','#10b981','#3b82f6','#a855f7','#ec4899','#14b8a6','#f97316'];
 const ROPE_UP = 60, ROPE_DOWN = 266;               // Seillänge oben / Kiste auf Ladefläche
 const PRAISE = ['Super!','Klasse!','Prima!','Spitze!','Toll gemacht!','Richtig!','Wunderbar!','Bravo!'];
-const STORE_KEY = 'kran-einmaleins-v1';
+const STORE_KEY = 'rechenkran-v2';
 
 /* ---------- Einstellungen ---------- */
-const settings = { rows: [2,5,10], count: 20, sound: true };
+const settings = {
+  mode: 'mul',                 // mul = Einmaleins, add = Plus & Minus
+  rows: [2, 5, 10], mulOps: ['mul'],
+  range: 20, addOps: ['plus', 'minus'], cross: ['ohne', 'mit'], types: ['ZE+E', 'ZE+ZE'],
+  count: 20, sound: true,
+};
 try { Object.assign(settings, JSON.parse(localStorage.getItem(STORE_KEY) || '{}')); } catch (e) {}
 const saveSettings = () => { try { localStorage.setItem(STORE_KEY, JSON.stringify(settings)); } catch (e) {} };
 
@@ -426,52 +467,153 @@ window.addEventListener('resize', fit);
 window.addEventListener('orientationchange', () => setTimeout(fit, 250));
 
 /* ---------- Aufgaben ---------- */
-function makeTasks(rows, count) {
-  let pool = [];
-  const refill = () => {
-    pool = [];
-    rows.forEach(r => { for (let k = 1; k <= 10; k++) pool.push(Math.random() < .5 ? { a: r, b: k } : { a: k, b: r }); });
-    shuffle(pool);
-  };
+// Eine Aufgabe: { a, op, b, ans, max, kind }  op: '·' ':' '+' '−'
+const OPSYM = { mul: '·', div: ':', plus: '+', minus: '−' };
+const taskText = (t) => `${t.a} ${t.op} ${t.b}`;
+const taskKey = (t) => t.op === '·' ? `${Math.min(t.a, t.b)}·${Math.max(t.a, t.b)}` : `${t.a}${t.op}${t.b}`;
+const isTen = (n) => n % 10 === 0;
+
+// Zehnerübergang: Plus, wenn die Einer mehr als 10 ergeben (bei ZE+ZE auch genau 10),
+// Minus, wenn man mehr Einer abzieht als da sind.
+function crosses(t) {
+  if (t.op === '+') { const s = t.a % 10 + t.b % 10; return s > 10 || (s === 10 && t.kind === 'ZE+ZE'); }
+  if (t.op === '−') return t.a % 10 < t.b % 10;
+  return false;
+}
+
+function buildPool(s = settings) {
+  const pool = [];
+  const add = (a, op, b, ans, max, kind) => pool.push({ a, op, b, ans, max, kind });
+  if (s.mode === 'mul') {
+    s.rows.forEach(r => {
+      for (let k = 1; k <= 10; k++) {
+        if (s.mulOps.includes('mul')) Math.random() < .5 ? add(r, '·', k, r * k, 100) : add(k, '·', r, r * k, 100);
+        if (s.mulOps.includes('div')) add(r * k, ':', r, k, 10);
+      }
+    });
+    return pool;
+  }
+  const plus = s.addOps.includes('plus'), minus = s.addOps.includes('minus');
+  if (s.range === 10) {
+    for (let a = 0; a <= 10; a++) for (let b = 1; b <= 10; b++) {
+      if (plus && a >= 1 && a + b <= 10) add(a, '+', b, a + b, 10);
+      if (minus && b <= a) add(a, '−', b, a - b, 10);
+    }
+    return pool;
+  }
+  const want = (t) => t.kind === 'Z+Z' || t.kind === 'ZE+Z' || s.cross.includes(crosses(t) ? 'mit' : 'ohne');
+  const push = (t) => { if (want(t)) pool.push(t); };
+  if (s.range === 20) {
+    for (let a = 1; a <= 20; a++) for (let b = 1; b <= 19; b++) {
+      // Aufgaben, die über die 10 gehen oder im zweiten Zehner liegen
+      if (plus && a + b <= 20 && a + b > 10) push({ a, op: '+', b, ans: a + b, max: 20 });
+      if (minus && a > 10 && b < a && b <= 10) push({ a, op: '−', b, ans: a - b, max: 20 });
+    }
+    return pool;
+  }
+  // bis 100
+  for (let a = 10; a <= 100; a++) for (let b = 1; b <= 90; b++) {
+    const zeA = a > 10 && a < 100 && !isTen(a);
+    const zeB = b > 10 && !isTen(b);
+    let kind = null;
+    if (isTen(a) && isTen(b)) kind = 'Z+Z';
+    else if (zeA && isTen(b)) kind = 'ZE+Z';
+    else if (b < 10) kind = 'ZE+E';
+    else if (zeB && (zeA || isTen(a))) kind = 'ZE+ZE';
+    if (!kind || !s.types.includes(kind)) continue;
+    // Plus: erste Zahl ist ein ZE (bei Z+Z ein Zehner)
+    if (plus && a + b <= 100 && (kind === 'Z+Z' || zeA) && a < 100) push({ a, op: '+', b, ans: a + b, max: 100, kind });
+    // Minus: Ergebnis mindestens 1; bei ZE−E darf die erste Zahl auch ein Zehner sein (50 − 3)
+    if (minus && b < a && a > 10 && (kind === 'Z+Z' || zeA || kind === 'ZE+E' || kind === 'ZE+ZE')) {
+      if (kind === 'ZE+ZE' && isTen(a) && a === 100) continue;
+      push({ a, op: '−', b, ans: a - b, max: 100, kind });
+    }
+  }
+  return pool;
+}
+
+function makeTasks(count, s = settings) {
+  // Nach Aufgabenart gruppieren, damit z. B. ZE+E nicht in den vielen ZE+ZE-Aufgaben untergeht
+  const groups = {};
+  buildPool(s).forEach(t => { const g = `${t.op}|${t.kind || ''}|${crosses(t)}`; (groups[g] = groups[g] || []).push(t); });
+  const keys = Object.keys(groups);
+  const bags = {};
   const out = [];
+  if (!keys.length) return out;
+  let keyBag = [];
   while (out.length < count) {
-    if (!pool.length) refill();
+    if (!keyBag.length) keyBag = shuffle(keys.slice());
+    const g = keyBag.pop();
+    if (!bags[g] || !bags[g].length) bags[g] = shuffle(groups[g].slice());
     const last = out[out.length - 1];
-    let i = pool.findIndex(t => !last || t.a * t.b !== last.a * last.b);
+    let i = bags[g].findIndex(t => !last || t.ans !== last.ans);
     if (i < 0) i = 0;
-    out.push(pool.splice(i, 1)[0]);
+    out.push(bags[g].splice(i, 1)[0]);
   }
   return out;
 }
 
+function isProduct(n) { for (let a = 1; a <= 10; a++) if (n % a === 0 && n / a <= 10) return true; return false; }
+function swapDigits(n) { return n >= 10 && n < 100 ? Number(String(n).split('').reverse().join('')) : n; }
+
 function makeOptions(t) {
-  const ans = t.a * t.b;
-  const valid = n => n > 0 && n <= 100 && n !== ans;
-  const near = shuffle([t.a * (t.b + 1), t.a * (t.b - 1), (t.a + 1) * t.b, (t.a - 1) * t.b, t.a * (t.b + 2), (t.a + 2) * t.b].filter(valid));
+  const ans = t.ans, lo = t.op === ':' ? 1 : 0, hi = t.max;
+  const valid = n => Number.isInteger(n) && n >= lo && n <= hi && n !== ans;
   const set = new Set([ans]);
-  // vertauschte Ziffern (z. B. 42 ↔ 24), wenn das selbst ein Einmaleins-Ergebnis ist
-  if (ans >= 10 && ans < 100) {
-    const sw = Number(String(ans).split('').reverse().join(''));
+  let near;
+  if (t.op === '·') {
+    near = [t.a * (t.b + 1), t.a * (t.b - 1), (t.a + 1) * t.b, (t.a - 1) * t.b, t.a * (t.b + 2), (t.a + 2) * t.b];
+    const sw = swapDigits(ans);
     if (valid(sw) && isProduct(sw) && Math.random() < .6) set.add(sw);
+  } else if (t.op === ':') {
+    near = [ans + 1, ans - 1, ans + 2, ans - 2, t.b !== ans ? t.b : ans + 3];
+  } else {
+    near = [ans + 1, ans - 1, ans + 2, ans - 2];
+    if (hi >= 20) near.push(ans + 10, ans - 10);           // typischer Fehler beim Übergang
+    if (t.op === '−') near.push(t.a + t.b);                  // Plus statt Minus gerechnet
+    const sw = swapDigits(ans);
+    if (hi === 100 && valid(sw) && Math.random() < .5) set.add(sw);
   }
-  for (const n of near) { if (set.size >= 5) break; set.add(n); }
+  for (const n of shuffle(near.filter(valid))) { if (set.size >= 5) break; set.add(n); }
   let guard = 0;
-  while (set.size < 5 && guard++ < 200) set.add((1 + Math.floor(Math.random() * 10)) * (1 + Math.floor(Math.random() * 10)));
+  while (set.size < 5 && guard++ < 300) {
+    const n = t.op === '·' ? (1 + Math.floor(Math.random() * 10)) * (1 + Math.floor(Math.random() * 10))
+      : ans + Math.floor(Math.random() * 13) - 6;
+    if (valid(n)) set.add(n);
+  }
+  for (let n = lo; set.size < 5 && n <= hi; n++) set.add(n);
   return shuffle([...set]);
 }
-function isProduct(n) { for (let a = 1; a <= 10; a++) if (n % a === 0 && n / a <= 10) return true; return false; }
 
 function tipFor(t) {
-  // Hilfe über eine Nachbaraufgabe (Kernaufgaben-Idee)
-  const { a, b } = t;
-  if (b === 1) return `${a} · 1 ist einfach ${a}`;
-  if (a === 1) return `1 · ${b} ist einfach ${b}`;
-  if (b === 10 || a === 10) return `Mal 10: hänge eine 0 an`;
-  if (b > 5 && a <= 5) return `Tipp: ${b} · ${a} ist dasselbe wie ${a} · ${b}`;
-  if (b === 2) return `Tipp: ${a} + ${a}`;
-  if (b >= 6) return `Tipp: ${a} · 5 = ${a * 5}, dann noch ${b - 5} · ${a} dazu`;
-  if (b <= 4 && a * (b + 1) <= 100 && b + 1 === 5) return `Tipp: ${a} · 5 = ${a * 5}, dann ${a} weniger`;
-  return `Tipp: ${a} · ${b - 1} = ${a * (b - 1)}, dann noch ${a} dazu`;
+  const { a, b, ans } = t;
+  if (t.op === ':') return `Denk an die Malaufgabe: ? · ${b} = ${a}`;
+  if (t.op === '·') {
+    if (b === 1) return `${a} · 1 ist einfach ${a}`;
+    if (a === 1) return `1 · ${b} ist einfach ${b}`;
+    if (b === 10 || a === 10) return `Mal 10: hänge eine 0 an`;
+    if (b > 5 && a <= 5) return `Tipp: ${b} · ${a} ist dasselbe wie ${a} · ${b}`;
+    if (b === 2) return `Tipp: ${a} + ${a}`;
+    if (b >= 6) return `Tipp: ${a} · 5 = ${a * 5}, dann noch ${b - 5} · ${a} dazu`;
+    if (b === 4) return `Tipp: ${a} · 5 = ${a * 5}, dann ${a} weniger`;
+    return `Tipp: ${a} · ${b - 1} = ${a * (b - 1)}, dann noch ${a} dazu`;
+  }
+  if (t.op === '+') {
+    if (t.max === 10) return `Tipp: Zähle von ${a} aus ${b} weiter`;
+    if (b >= 10 && !isTen(b)) { const z = b - b % 10; return `Tipp: Erst die Zehner: ${a} + ${z} = ${a + z}, dann + ${b % 10}`; }
+    if (isTen(b)) return `Tipp: Nur die Zehner ändern sich: ${a} + ${b}`;
+    if (crosses(t)) { const n = 10 - a % 10; return `Tipp: Erst bis ${a + n}: ${a} + ${n}, dann noch ${b - n}`; }
+    return `Tipp: Rechne die Einer: ${a % 10} + ${b} = ${a % 10 + b}`;
+  }
+  // Minus
+  if (t.max === 10) return `Tipp: Zähle von ${a} aus ${b} zurück`;
+  if (b >= 10 && !isTen(b)) { const z = b - b % 10; return `Tipp: Erst die Zehner: ${a} − ${z} = ${a - z}, dann − ${b % 10}`; }
+  if (isTen(b)) return `Tipp: Nur die Zehner ändern sich: ${a} − ${b}`;
+  if (crosses(t)) {
+    const e = a % 10;
+    return e ? `Tipp: Erst bis ${a - e}: ${a} − ${e}, dann noch ${b - e}` : `Tipp: ${a} − 10 = ${a - 10}, dann ${10 - b} dazu`;
+  }
+  return `Tipp: Rechne die Einer: ${a % 10} − ${b} = ${a % 10 - b}`;
 }
 
 /* ---------- Spielzustand ---------- */
@@ -573,7 +715,8 @@ async function nextTask(first = false) {
   st.tries = 0; st.dead = new Set();
   st.options = makeOptions(t);
   updateHud();
-  taskLabel.textContent = `${t.a} · ${t.b}`;
+  taskLabel.textContent = taskText(t);
+  taskLabel.classList.toggle('small', taskText(t).length > 6);
   crate.style.visibility = 'visible';
   crate.classList.remove('pop'); crate.offsetHeight; crate.classList.add('pop');
   buildTrucks(st.options);
@@ -612,7 +755,7 @@ async function drop() {
   }
   st.mode = 'busy';
   [...trucksEl.children].forEach(t => t.classList.remove('target'));
-  const t = current(), ans = t.a * t.b, val = st.options[st.slot];
+  const t = current(), ans = t.ans, val = st.options[st.slot];
   sfx.drop();
   setRope(ROPE_DOWN);
   await sleep(720);
@@ -625,7 +768,7 @@ async function drop() {
     truck.classList.add('ok');
     sfx.good();
     confetti(SLOTS[st.slot], 450);
-    say(`${pick(PRAISE)}<small>${t.a} · ${t.b} = ${ans}</small>`, 'good', 1700);
+    say(`${pick(PRAISE)}<small>${taskText(t)} = ${ans}</small>`, 'good', 1700);
     // Kiste auf den Laster umsetzen
     const c = crate.cloneNode(true); c.removeAttribute('id'); c.classList.remove('pop', 'shake');
     truck.querySelector('.body').appendChild(c);
@@ -644,11 +787,11 @@ async function drop() {
     truck.classList.add('wrong', 'shake');
     crate.classList.remove('shake', 'pop'); crate.offsetHeight; crate.classList.add('shake');
     if (st.tries === 1) {
-      const key = `${Math.min(t.a, t.b)} · ${Math.max(t.a, t.b)}`;
-      st.mistakes.set(key, { a: t.a, b: t.b, n: (st.mistakes.get(key)?.n || 0) + 1 });
+      const key = taskKey(t);
+      if (!st.mistakes.has(key)) st.mistakes.set(key, { ...t, rep: false });
       // später noch einmal fragen (höchstens 2 Wiederholungen je Aufgabe)
-      const reps = st.queue.filter(q => q.a === t.a && q.b === t.b && q.rep).length;
-      if (reps < 2) st.queue.splice(Math.min(st.idx + 4, st.queue.length), 0, { a: t.a, b: t.b, rep: true });
+      const reps = st.queue.filter(q => q.rep && taskKey(q) === key).length;
+      if (reps < 2) st.queue.splice(Math.min(st.idx + 4, st.queue.length), 0, { ...t, rep: true });
     }
     updateHud();
     say(`Das passt nicht.<small>${tipFor(t)}</small>`, 'bad', 0);
@@ -683,7 +826,7 @@ function finish() {
   const list = [...st.mistakes.values()];
   $('#endMistakesBox').style.display = list.length ? '' : 'none';
   $('#btnPractice').style.display = list.length ? '' : 'none';
-  $('#endMistakes').innerHTML = list.map(m => `<span>${m.a} · ${m.b} = ${m.a * m.b}</span>`).join('');
+  $('#endMistakes').innerHTML = list.map(m => `<span>${taskText(m)} = ${m.ans}</span>`).join('');
   for (let i = 0; i < 4; i++) setTimeout(() => confetti(200 + Math.random() * 600, 300), i * 250);
   setTimeout(() => $('#endScreen').classList.add('show'), 700);
 }
@@ -701,31 +844,75 @@ function startGame(tasks) {
 }
 
 /* ---------- Menü ---------- */
+function chipGroup(el, items, isOn, onClick) {
+  el.innerHTML = '';
+  items.forEach(it => {
+    const b = document.createElement('button');
+    b.className = 'chip big2' + (isOn(it.v) ? ' on' : '');
+    b.innerHTML = it.label + (it.sub ? `<small>${it.sub}</small>` : '');
+    b.onclick = () => { onClick(it.v); saveSettings(); renderMenu(); };
+    el.appendChild(b);
+  });
+}
+const toggleIn = (arr, v) => arr.includes(v) ? arr.filter(x => x !== v) : [...arr, v];
+
 function renderMenu() {
+  const s = settings;
+  [...$('#modeTabs').children].forEach(b => b.classList.toggle('on', b.dataset.mode === s.mode));
+  $('#secMul').style.display = s.mode === 'mul' ? '' : 'none';
+  $('#secAdd').style.display = s.mode === 'add' ? '' : 'none';
+
+  // Einmaleins
+  chipGroup($('#mulOps'), [{ v: 'mul', label: 'Mal ·', sub: '3 · 4' }, { v: 'div', label: 'Geteilt :', sub: '12 : 3' }],
+    v => s.mulOps.includes(v), v => { s.mulOps = toggleIn(s.mulOps, v); });
   const rb = $('#rowButtons');
   rb.innerHTML = '';
   for (let r = 1; r <= 10; r++) {
     const b = document.createElement('button');
-    b.className = 'row-btn' + (settings.rows.includes(r) ? ' on' : '');
+    b.className = 'row-btn' + (s.rows.includes(r) ? ' on' : '');
     b.style.setProperty('--c', ROW_COLORS[r - 1]);
     b.innerHTML = `${r}<small>${r}er-Reihe</small>`;
-    b.onclick = () => {
-      settings.rows = settings.rows.includes(r) ? settings.rows.filter(x => x !== r) : [...settings.rows, r].sort((a, b) => a - b);
-      saveSettings(); renderMenu();
-    };
+    b.onclick = () => { s.rows = toggleIn(s.rows, r).sort((x, y) => x - y); saveSettings(); renderMenu(); };
     rb.appendChild(b);
   }
-  const cc = $('#countChips');
-  cc.innerHTML = '';
-  [10, 20, 30, 50].forEach(n => {
-    const b = document.createElement('button');
-    b.className = 'chip' + (settings.count === n ? ' on' : '');
-    b.textContent = n;
-    b.onclick = () => { settings.count = n; saveSettings(); renderMenu(); };
-    cc.appendChild(b);
-  });
-  $('#btnStart').disabled = settings.rows.length === 0;
-  $('#btnStart').textContent = settings.rows.length ? "Los geht's! ▶" : 'Wähle mindestens eine Reihe';
+
+  // Plus & Minus
+  chipGroup($('#addOps'), [{ v: 'plus', label: 'Plus +' }, { v: 'minus', label: 'Minus −' }],
+    v => s.addOps.includes(v), v => { s.addOps = toggleIn(s.addOps, v); });
+  chipGroup($('#rangeChips'), [{ v: 10, label: 'bis 10' }, { v: 20, label: 'bis 20' }, { v: 100, label: 'bis 100' }],
+    v => s.range === v, v => { s.range = v; });
+  const op = s.addOps.length === 1 ? (s.addOps[0] === 'plus' ? '+' : '−') : '±';
+  const ex = (p, m) => s.addOps.length === 1 ? (s.addOps[0] === 'plus' ? p : m) : `${p} / ${m}`;
+  $('#typeBox').style.display = s.range === 100 ? '' : 'none';
+  chipGroup($('#typeChips'), [
+    { v: 'Z+Z',   label: `Z ${op} Z`,   sub: ex('30 + 40', '70 − 20') },
+    { v: 'ZE+Z',  label: `ZE ${op} Z`,  sub: ex('34 + 20', '56 − 30') },
+    { v: 'ZE+E',  label: `ZE ${op} E`,  sub: ex('34 + 5', '47 − 3') },
+    { v: 'ZE+ZE', label: `ZE ${op} ZE`, sub: ex('34 + 25', '68 − 25') },
+  ], v => s.types.includes(v), v => { s.types = toggleIn(s.types, v); });
+  const crossMatters = s.range === 20 || (s.range === 100 && s.types.some(k => k === 'ZE+E' || k === 'ZE+ZE'));
+  $('#crossBox').style.display = crossMatters ? '' : 'none';
+  chipGroup($('#crossChips'), [
+    { v: 'ohne', label: 'ohne', sub: s.range === 20 ? ex('13 + 4', '17 − 5') : ex('34 + 5', '47 − 3') },
+    { v: 'mit',  label: 'mit',  sub: s.range === 20 ? ex('8 + 5', '13 − 6') : ex('38 + 5', '42 − 7') },
+  ], v => s.cross.includes(v), v => { s.cross = toggleIn(s.cross, v); });
+
+  // Anzahl
+  chipGroup($('#countChips'), [10, 20, 30, 50].map(n => ({ v: n, label: String(n) })), v => s.count === v, v => { s.count = v; });
+  [...$('#countChips').children].forEach(b => b.classList.remove('big2'));
+
+  // Prüfen, ob es Aufgaben gibt
+  const n = new Set(buildPool().map(taskKey)).size;
+  let msg = '';
+  if (s.mode === 'mul' && !s.rows.length) msg = 'Wähle mindestens eine Reihe';
+  else if (s.mode === 'mul' && !s.mulOps.length) msg = 'Wähle Mal oder Geteilt';
+  else if (s.mode === 'add' && !s.addOps.length) msg = 'Wähle Plus oder Minus';
+  else if (s.mode === 'add' && s.range === 100 && !s.types.length) msg = 'Wähle mindestens eine Aufgabenart';
+  else if (!n) msg = 'Wähle ohne oder mit Zehnerübergang';
+  $('#poolInfo').textContent = msg || `${n} verschiedene Aufgaben`;
+  $('#poolInfo').classList.toggle('warn', !!msg);
+  $('#btnStart').disabled = !!msg;
+  $('#btnStart').textContent = "Los geht's! ▶";
 }
 function openMenu() {
   if (st.mode === 'busy') return;
@@ -735,16 +922,20 @@ function openMenu() {
   renderMenu();
   $('#menu').classList.add('show');
 }
+[...$('#modeTabs').children].forEach(b => b.onclick = () => { settings.mode = b.dataset.mode; saveSettings(); renderMenu(); });
 $('#allRows').onclick = () => { settings.rows = [1,2,3,4,5,6,7,8,9,10]; saveSettings(); renderMenu(); };
 $('#noRows').onclick = () => { settings.rows = []; saveSettings(); renderMenu(); };
-$('#btnStart').onclick = () => { if (settings.rows.length) startGame(makeTasks(settings.rows, settings.count)); };
-$('#btnAgain').onclick = () => startGame(makeTasks(settings.rows, settings.count));
+$('#btnStart').onclick = () => { if (!$('#btnStart').disabled) startGame(makeTasks(settings.count)); };
+$('#btnAgain').onclick = () => startGame(makeTasks(settings.count));
 $('#btnBack').onclick = openMenu;
 $('#btnMenu').onclick = openMenu;
 $('#btnPractice').onclick = () => {
+  // jede falsche Aufgabe zweimal; Malaufgaben einmal mit vertauschten Zahlen
   const list = [...st.mistakes.values()];
-  // jede falsche Aufgabe zweimal, gemischt und mal vertauscht
-  const tasks = shuffle(list.flatMap(m => [{ a: m.a, b: m.b }, { a: m.b, b: m.a }]));
+  const tasks = shuffle(list.flatMap(m => [
+    { ...m, rep: false },
+    m.op === '·' ? { ...m, a: m.b, b: m.a, rep: false } : { ...m, rep: false },
+  ]));
   startGame(tasks);
 };
 function renderSound() { $('#btnSound').textContent = settings.sound ? '🔊' : '🔇'; }

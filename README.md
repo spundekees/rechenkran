@@ -1,10 +1,33 @@
-# Rechenkran – Kran-Einmaleins
+# Rechenkran
 
-Lernspiel für Grundschulkinder zum kleinen 1×1. Die Kinder fahren einen Baukran über den Laster mit dem richtigen Ergebnis und setzen dort die Kiste mit der Aufgabe ab.
-
-- **Starten:** `index.html` im Browser öffnen. Es braucht keine Installation und kein Internet.
-- **Reihen:** 1er- bis 10er-Reihe, einzeln wählbar und frei kombinierbar. Dazu 10, 20, 30 oder 50 Aufgaben.
-- **Steuerung:** Am Computer mit `←` `→` fahren, mit `↓` oder der Leertaste absetzen. Auf dem iPad mit den Knöpfen unter dem Bild. Man kann auch direkt auf einen Laster tippen, dann fährt der Kran dorthin.
-- **Fehler:** Der falsche Laster wird ausgegraut und es erscheint ein Rechentipp. Nach zwei Fehlern leuchtet der richtige Laster. Falsch gelöste Aufgaben kommen später noch einmal dran. Am Ende gibt es Sterne und den Knopf „Fehler üben“.
+Lernspiel für Grundschulkinder. Am Kran hängt eine Kiste mit einer Rechenaufgabe. Die Kinder fahren den Kran über den Laster mit dem richtigen Ergebnis und setzen die Kiste dort ab.
 
 **Online spielen:** https://spundekees.github.io/rechenkran/
+Offline genügt es, `index.html` im Browser zu öffnen. Es braucht keine Installation und kein Internet.
+
+## Was man üben kann
+**Einmaleins**
+- Mal (·) und/oder Geteilt (:)
+- 1er- bis 10er-Reihe, einzeln wählbar und frei kombinierbar
+
+**Plus & Minus**
+- Plus und/oder Minus
+- Zahlenraum bis 10, bis 20 oder bis 100
+- Bis 100 gibt es diese Aufgabenarten (frei kombinierbar):
+  - Z ± Z (30 + 40)
+  - ZE ± Z (34 + 20)
+  - ZE ± E (34 + 5)
+  - ZE ± ZE (34 + 25)
+- Zehnerübergang: ohne, mit oder beides (bis 20 und bei ZE ± E / ZE ± ZE)
+
+Gewählte Aufgabenarten kommen ungefähr gleich oft dran. Dazu wählt man 10, 20, 30 oder 50 Aufgaben. Die Einstellungen werden im Browser gespeichert.
+
+## Bedienung
+- **Computer:** mit `←` `→` fahren, mit `↓` oder der Leertaste absetzen.
+- **iPad:** mit den Knöpfen unter dem Bild steuern. Man kann auch direkt auf einen Laster tippen, dann fährt der Kran dorthin.
+
+## Hilfen
+- Bei einem Fehler wird der falsche Laster ausgegraut und es erscheint ein Rechentipp. Beispiele: „Erst bis 40: 38 + 2, dann noch 3“ oder „Denk an die Malaufgabe: ? · 4 = 28“.
+- Nach zwei Fehlern leuchtet der richtige Laster.
+- Falsch gelöste Aufgaben kommen später noch einmal dran.
+- Am Ende gibt es 1 bis 3 Sterne und den Knopf „Fehler üben“.
